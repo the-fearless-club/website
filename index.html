@@ -1,235 +1,42 @@
 <!DOCTYPE html>
 <html lang="nl">
-<head>
-<meta charset="UTF-8">
-<title>Fearless Club</title>
-<style>
-* { box-sizing: border-box; }
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>The Fearless Club</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header class="hero">
+      <h1>THE FEARLESS CLUB</h1>
+      <p>4 mensen. 0 angst. 1 slecht idee.</p>
+      <button id="chaosBtn">🌈 RAINBOW CHAOS 🌈</button>
+    </header>
 
-body {
-    margin: 0;
-    font-family: 'Segoe UI', Arial, sans-serif;
-    background: radial-gradient(circle at top, #000428, #004e92);
-    color: white;
-    text-align: center;
-    overflow-x: hidden;
-    animation: bodySpin 40s linear infinite;
-}
+    <main class="members">
+      <article class="card tree">
+        <h2>Fearless Tree</h2>
+        <p>Rustig. Sterk. Beweegt nooit. Tot nu.</p>
+      </article>
 
-canvas#bg {
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: -1;
-}
+      <article class="card tomato">
+        <h2>Fearless Tomato</h2>
+        <p>Zacht van binnen. Hard van mening.</p>
+      </article>
 
-header {
-    padding: 70px 20px;
-    background: rgba(0,0,0,0.4);
-    backdrop-filter: blur(12px);
-    animation: introZoom 1.2s ease, slowRotate 20s linear infinite;
-}
+      <article class="card cactus">
+        <h2>Fearless Cactus</h2>
+        <p>Niet aanraken. Serieus. Niet.</p>
+      </article>
 
-h1 {
-    margin: 0;
-    font-size: 3.8em;
-    letter-spacing: 5px;
-    text-shadow: 0 0 25px rgba(255,255,255,0.9);
-    animation: glow 2s ease-in-out infinite alternate, spinText 12s linear infinite;
-}
+      <article class="card goose">
+        <h2>Fearless Goose</h2>
+        <p>Eindbaas. Geen genade.</p>
+      </article>
+    </main>
 
-.subtitle {
-    opacity: 0.95;
-    margin-top: 15px;
-    font-size: 1.3em;
-    animation: spinTextReverse 18s linear infinite;
-}
+    <footer>© The Fearless Club — absoluut nergens bang voor</footer>
 
-.members {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: 40px;
-    padding: 70px;
-    max-width: 1200px;
-    margin: auto;
-}
-
-.card {
-    background: rgba(255,255,255,0.18);
-    border-radius: 30px;
-    padding: 35px;
-    backdrop-filter: blur(14px);
-    box-shadow: 0 25px 50px rgba(0,0,0,0.6);
-    transition: 0.5s;
-    transform-style: preserve-3d;
-    opacity: 0;
-    transform: translateY(100px) rotateX(30deg);
-    animation: floatSpin 12s linear infinite;
-}
-
-.card.show {
-    opacity: 1;
-    transform: translateY(0) rotateX(0deg);
-}
-
-.card:hover {
-    transform: rotateY(25deg) rotateX(10deg) scale(1.15);
-    box-shadow: 0 40px 80px rgba(0,0,0,0.9);
-}
-
-.emoji {
-    font-size: 70px;
-    animation: megaSpin 6s linear infinite;
-}
-
-button {
-    margin-top: 35px;
-    padding: 18px 40px;
-    border: none;
-    border-radius: 50px;
-    font-size: 20px;
-    cursor: pointer;
-    background: linear-gradient(45deg, #ff00cc, #3333ff);
-    color: white;
-    font-weight: bold;
-    box-shadow: 0 15px 35px rgba(0,0,0,0.7);
-    transition: 0.3s;
-    animation: spinButton 10s linear infinite;
-}
-
-button:hover {
-    transform: scale(1.25) rotate(10deg);
-    box-shadow: 0 25px 55px rgba(0,0,0,1);
-}
-
-footer {
-    padding: 40px;
-    background: rgba(0,0,0,0.35);
-    animation: spinText 30s linear infinite;
-}
-
-@keyframes glow {
-    from { text-shadow: 0 0 10px #fff; }
-    to { text-shadow: 0 0 40px #00ffff; }
-}
-
-@keyframes introZoom {
-    from { opacity: 0; transform: scale(0.6); }
-    to { opacity: 1; transform: scale(1); }
-}
-
-@keyframes spinText {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
-}
-
-@keyframes spinTextReverse {
-    from { transform: rotate(360deg); }
-    to { transform: rotate(0deg); }
-}
-
-@keyframes megaSpin {
-    from { transform: rotate(0deg) scale(1); }
-    50% { transform: rotate(180deg) scale(1.3); }
-    to { transform: rotate(360deg) scale(1); }
-}
-
-@keyframes floatSpin {
-    0% { transform: translateY(0) rotate(0deg); }
-    50% { transform: translateY(-20px) rotate(180deg); }
-    100% { transform: translateY(0) rotate(360deg); }
-}
-
-@keyframes slowRotate {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
-}
-
-@keyframes spinButton {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(-360deg); }
-}
-
-@keyframes bodySpin {
-    from { filter: hue-rotate(0deg); }
-    to { filter: hue-rotate(360deg); }
-}
-</style>
-</head>
-<body>
-
-<canvas id="bg"></canvas>
-
-<header>
-<h1>FEARLESS CLUB</h1>
-<p class="subtitle">SUPER KIKKE COOL 🚀</p>
-<button onclick="becomeFearless()">JOIN THE FEARLESS</button>
-</header>
-
-<section class="members">
-<div class="card"><div class="emoji">🌳</div><h2>fearless-tree</h2><p>Roterende boom van epische kracht.</p></div>
-<div class="card"><div class="emoji">🌵</div><h2>fearless-cactus</h2><p>Stekelig en draaierig.</p></div>
-<div class="card"><div class="emoji">🍅</div><h2>fearless-tomato</h2><p>Tomaat in turbo-spin.</p></div>
-<div class="card"><div class="emoji">🪿</div><h2>fearless-goose</h2><p>De draaiende eindbaas.</p></div>
-</section>
-
-<footer>© FEARLESS CLUB – NO FEAR – ALL SPIN</footer>
-
-<script>
-// CARD REVEAL
-const cards = document.querySelectorAll('.card');
-function reveal() {
-    const trigger = window.innerHeight * 0.85;
-    cards.forEach(c => {
-        if (c.getBoundingClientRect().top < trigger) c.classList.add('show');
-    });
-}
-window.addEventListener('scroll', reveal);
-window.addEventListener('load', reveal);
-
-// BUTTON SHAKE + COLOR BLAST
-function becomeFearless() {
-    document.body.style.animation = 'bodySpin 2s linear infinite';
-    setTimeout(()=>document.body.style.animation='bodySpin 40s linear infinite',2000);
-}
-
-// PARTICLE BACKGROUND
-const canvas = document.getElementById('bg');
-const ctx = canvas.getContext('2d');
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
-
-let particles = [];
-for (let i=0;i<150;i++){
-    particles.push({
-        x: Math.random()*canvas.width,
-        y: Math.random()*canvas.height,
-        r: Math.random()*3+1,
-        dx:(Math.random()-0.5)*1.2,
-        dy:(Math.random()-0.5)*1.2
-    });
-}
-
-function animate(){
-    ctx.clearRect(0,0,canvas.width,canvas.height);
-    ctx.fillStyle='rgba(255,255,255,0.8)';
-    particles.forEach(p=>{
-        p.x+=p.dx; p.y+=p.dy;
-        if(p.x<0||p.x>canvas.width)p.dx*=-1;
-        if(p.y<0||p.y>canvas.height)p.dy*=-1;
-        ctx.beginPath();
-        ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
-        ctx.fill();
-    });
-    requestAnimationFrame(animate);
-}
-animate();
-
-window.addEventListener('resize',()=>{
-    canvas.width=window.innerWidth;
-    canvas.height=window.innerHeight;
-});
-</script>
-
-</body>
+    <script src="script.js"></script>
+  </body>
 </html>
