@@ -1,0 +1,198 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  background: #0f172a;
+  color: white;
+  text-align: center;
+  transition: filter 0.4s ease;
+}
+
+/* HERO */
+.hero {
+  padding: 4rem 1.5rem;
+  background: linear-gradient(135deg, #020024, #090979, #00d4ff);
+}
+
+.hero h1 {
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  margin: 0 0 0.5rem;
+  letter-spacing: 3px;
+}
+
+.hero p {
+  opacity: 0.9;
+  margin-bottom: 2rem;
+}
+
+button {
+  font-size: 1.1rem;
+  padding: 1rem 2.5rem;
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+  background: linear-gradient(45deg, #ff00cc, #3333ff);
+  color: white;
+  font-weight: bold;
+  transition: transform 0.2s ease;
+}
+
+button:hover {
+  transform: scale(1.1);
+}
+
+/* MEMBERS */
+.members {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 4rem 1.5rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 2rem;
+}
+
+/* CARD */
+.card {
+  position: relative;
+  height: 320px;
+  border-radius: 22px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 1.5rem;
+  color: white;
+  background-size: cover;
+  background-position: center;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.55);
+  transition: transform 0.3s ease;
+}
+
+.card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.2));
+  z-index: 0;
+  pointer-events: none;
+}
+
+.card h2,
+.card p {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+}
+
+.card h2 {
+  font-size: 1.4rem;
+  margin-bottom: 0.4rem;
+}
+
+.card p {
+  font-size: 0.95rem;
+  opacity: 0.9;
+}
+
+.card:hover {
+  transform: translateY(-10px) scale(1.02);
+}
+
+/* CLONE CHAOS */
+.clone {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 120px;
+  height: 120px;
+  border-radius: 16px;
+  background-size: cover;
+  background-position: center;
+  pointer-events: none;
+  z-index: 9999;
+  will-change: transform;
+}
+
+.card .github {
+  position: absolute;
+  bottom: 14px;
+  right: 16px;
+  width: 22px;
+  height: 22px;
+
+  background: white;
+  mask: url('https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/github.svg') no-repeat center;
+  -webkit-mask: url('https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/github.svg') no-repeat center;
+  mask-size: contain;
+  -webkit-mask-size: contain;
+
+  opacity: 0.7;
+  z-index: 2;
+}
+
+.card .github:hover {
+  opacity: 1;
+}
+
+/* AVATARS */
+.card.tree {
+  background-image: url('img/fearless-tree.png');
+}
+
+.card.tomato {
+  background-image: url('img/fearless-tomato.png');
+}
+
+.card.cactus {
+  background-image: url('img/fearless-cactus.png');
+}
+
+.card.goose {
+  background-image: url('img/fearless-goose.png');
+}
+
+/* FOOTER */
+footer {
+  padding: 2rem;
+  opacity: 0.6;
+  font-size: 0.9rem;
+}
+
+/* CHAOS MODE */
+.chaos {
+  animation: rainbow 2s linear infinite;
+}
+
+.chaos .card {
+  animation: spin 3s linear infinite;
+}
+
+.card,
+.card * {
+  user-select: none;
+}
+
+.card {
+  cursor: pointer;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes rainbow {
+  from {
+    filter: hue-rotate(0deg);
+  }
+  to {
+    filter: hue-rotate(360deg);
+  }
+}
