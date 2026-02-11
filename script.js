@@ -53,7 +53,7 @@ function spawnClones(card) {
 
   const SIZE = 120;
   const BOUNCE_TIME = 3000;
-  const SPAWN_RATE = 120; // lager = meer clones
+  const SPAWN_RATE = 5; // lager = meer clones
 
   const vw = window.innerWidth;
   const vh = window.innerHeight;
