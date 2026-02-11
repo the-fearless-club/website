@@ -1,45 +1,45 @@
-console.log('SCRIPT LOADED');
+console.log("SCRIPT LOADED");
 
-document.addEventListener('DOMContentLoaded', () => {
-  console.log('DOM READY');
+document.addEventListener("DOMContentLoaded", () => {
+  console.log("DOM READY");
 
   // chaos toggle
-  const chaosBtn = document.getElementById('chaosBtn');
-  chaosBtn.addEventListener('click', () => {
-    document.body.classList.toggle('chaos');
+  const chaosBtn = document.getElementById("chaosBtn");
+  chaosBtn.addEventListener("click", () => {
+    document.body.classList.toggle("chaos");
   });
 
   // github
   const repoMap = {
-    tree: 'https://github.com/fearless-tree',
-    cactus: 'https://github.com/fearless-cactus',
-    tomato: 'https://github.com/lekrkoekje',
-    goose: 'https://github.com/Mehcann',
+    tree: "https://github.com/fearless-tree",
+    cactus: "https://github.com/fearless-cactus",
+    tomato: "https://github.com/lekrkoekje",
+    goose: "https://github.com/Mehcann",
   };
 
   // voeg github links toe aan kaarten
-  document.querySelectorAll('.card').forEach((card) => {
+  document.querySelectorAll(".card").forEach((card) => {
     const key = Object.keys(repoMap).find((k) => card.classList.contains(k));
     if (!key) return;
 
-    const link = document.createElement('a');
-    link.className = 'github';
+    const link = document.createElement("a");
+    link.className = "github";
     link.href = repoMap[key];
-    link.target = '_blank';
-    link.rel = 'noopener';
-    link.innerHTML = '';
+    link.target = "_blank";
+    link.rel = "noopener";
+    link.innerHTML = "";
 
-    link.addEventListener('click', (e) => e.stopPropagation());
+    link.addEventListener("click", (e) => e.stopPropagation());
     card.appendChild(link);
   });
 
   // kaart klik
-  const cards = document.querySelectorAll('.card');
-  console.log('CARDS FOUND:', cards.length);
+  const cards = document.querySelectorAll(".card");
+  console.log("CARDS FOUND:", cards.length);
 
   cards.forEach((card) => {
-    card.addEventListener('click', () => {
-      console.log('CARD CLICKED');
+    card.addEventListener("click", () => {
+      console.log("CARD CLICKED");
       spawnClones(card);
     });
   });
@@ -47,14 +47,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // clone spawner
 function spawnClones(card) {
-  console.log('SPAWN CLONES FIRED');
+  console.log("SPAWN CLONES FIRED");
 
   const bg = getComputedStyle(card).backgroundImage;
-  console.log('BG IMAGE:', bg);
 
-  const COUNT = 100;
   const SIZE = 120;
   const BOUNCE_TIME = 3000;
+  const SPAWN_RATE = 120; // lager = meer clones
 
   const vw = window.innerWidth;
   const vh = window.innerHeight;
@@ -62,9 +61,9 @@ function spawnClones(card) {
   const clones = [];
   const start = performance.now();
 
-  for (let i = 0; i < COUNT; i++) {
-    const el = document.createElement('div');
-    el.className = 'clone';
+  function makeClone() {
+    const el = document.createElement("div");
+    el.className = "clone";
     el.style.backgroundImage = bg;
 
     const angle = Math.random() * Math.PI * 2;
@@ -84,12 +83,15 @@ function spawnClones(card) {
     clones.push(clone);
   }
 
+  // blijf clones maken
+  const spawner = setInterval(makeClone, SPAWN_RATE);
+
   function animate(now) {
     clones.forEach((c) => {
       if (!c.falling && now - start > BOUNCE_TIME) {
         c.falling = true;
-        c.vx *= 0.2; // behoud richting
-        c.vy = 2; // begin val
+        c.vx *= 0.2;
+        c.vy = 2;
       }
 
       if (c.falling) {
@@ -99,7 +101,7 @@ function spawnClones(card) {
       c.x += c.vx;
       c.y += c.vy;
 
-      // bounce alleen zolang ze NIET vallen
+      // bounce zolang ze nog niet vallen
       if (!c.falling) {
         if (c.x <= 0 || c.x >= vw - SIZE) c.vx *= -1;
         if (c.y <= 0 || c.y >= vh - SIZE) c.vy *= -1;
@@ -108,8 +110,9 @@ function spawnClones(card) {
       c.el.style.transform = `translate3d(${c.x}px, ${c.y}px, 0)`;
     });
 
-    // cleanup pas als ze onder beeld zijn
-    if (clones.every((c) => c.y > vh + SIZE)) {
+    // stop als alles onder beeld is
+    if (clones.length > 0 && clones.every((c) => c.y > vh + SIZE)) {
+      clearInterval(spawner);
       clones.forEach((c) => c.el.remove());
       return;
     }
