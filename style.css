@@ -183,6 +183,7 @@ footer {
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }
@@ -192,7 +193,22 @@ footer {
   from {
     filter: hue-rotate(0deg);
   }
+
   to {
     filter: hue-rotate(360deg);
+  }
+}
+
+/* tablet responisveness */
+@media (max-width: 1024px) {
+  .gallery {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* mobile reposniveness */
+@media (max-width: 768px) {
+  .gallery {
+    grid-template-columns: 1fr;
   }
 }
