@@ -99,6 +99,17 @@ body {
   text-align: center;
 }
 
+#homeBtn, #homeBtn2 {
+  margin-top: 2rem;
+  background: rgba(255, 255, 255, 0.15);
+  border: 2px solid rgba(255, 255, 255, 0.4);
+}
+
+#homeBtn:hover, #homeBtn2:hover {
+  background: rgba(255, 255, 255, 0.3);
+  border-color: rgba(255, 255, 255, 0.7);
+}
+
 /* GAME SCREEN */
 #gameScreen {
   background: #000;
@@ -110,11 +121,28 @@ body {
   height: 100%;
 }
 
+#gifBackground {
+  position: absolute;
+  inset: 0;
+  background-image: url('img/epstein-jeffrey-epstein.gif');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  z-index: 0;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+#gifBackground.active {
+  opacity: 1;
+}
+
 canvas {
   display: block;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(to bottom, #87ceeb, #e8f4f8);
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
 }
 
 #hud {
@@ -205,5 +233,129 @@ button:active {
 @media (max-width: 768px) {
   button {
     margin: 0.7rem;
+  }
+}
+
+/* 1440p (2560x1440) and above */
+@media (min-width: 2560px) {
+  .selection-container h1 {
+    font-size: 4rem;
+  }
+
+  .selection-container p {
+    font-size: 1.6rem;
+    margin-bottom: 3rem;
+  }
+
+  .character-grid {
+    max-width: 1200px;
+    gap: 3rem;
+  }
+
+  .character-card {
+    padding: 2.5rem;
+    border-radius: 24px;
+  }
+
+  .character-card img {
+    width: 150px;
+    height: 150px;
+    border-radius: 16px;
+  }
+
+  .character-card h3 {
+    font-size: 1.4rem;
+  }
+
+  #score {
+    font-size: 2.5rem;
+  }
+
+  #pauseBtn {
+    font-size: 1.6rem;
+    padding: 1.2rem 2.5rem;
+    border-radius: 12px;
+  }
+
+  .game-over-container {
+    padding: 4rem;
+    border-radius: 30px;
+  }
+
+  .game-over-container h1 {
+    font-size: 4.5rem;
+  }
+
+  #finalScore {
+    font-size: 2rem;
+    margin-bottom: 3rem;
+  }
+
+  button {
+    padding: 1.4rem 3rem;
+    font-size: 1.4rem;
+    border-radius: 12px;
+  }
+}
+
+/* 4K (3840x2160) and above */
+@media (min-width: 3840px) {
+  .selection-container h1 {
+    font-size: 5.5rem;
+  }
+
+  .selection-container p {
+    font-size: 2rem;
+    margin-bottom: 4rem;
+  }
+
+  .character-grid {
+    max-width: 1600px;
+    gap: 4rem;
+  }
+
+  .character-card {
+    padding: 3.5rem;
+    border-radius: 32px;
+  }
+
+  .character-card img {
+    width: 200px;
+    height: 200px;
+    border-radius: 20px;
+  }
+
+  .character-card h3 {
+    font-size: 1.8rem;
+  }
+
+  #score {
+    font-size: 3.5rem;
+  }
+
+  #pauseBtn {
+    font-size: 2rem;
+    padding: 1.6rem 3.5rem;
+    border-radius: 16px;
+  }
+
+  .game-over-container {
+    padding: 5rem;
+    border-radius: 40px;
+  }
+
+  .game-over-container h1 {
+    font-size: 6rem;
+  }
+
+  #finalScore {
+    font-size: 2.8rem;
+    margin-bottom: 4rem;
+  }
+
+  button {
+    padding: 1.8rem 4rem;
+    font-size: 1.8rem;
+    border-radius: 16px;
   }
 }

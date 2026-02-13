@@ -84,7 +84,7 @@ function spawnClones(card) {
 
   // 🔥 Oneindig en supersnel spawnen
   function spawnLoop() {
-    for (let i = 0; i < 5000; i++) {
+    for (let i = 0; i < 15; i++) {
       // 1000 clones per frame
       makeClone();
     }

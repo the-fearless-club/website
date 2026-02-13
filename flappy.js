@@ -21,8 +21,14 @@ function resizeCanvas() {
   canvas.height = window.innerHeight;
 }
 resizeCanvas();
-window.addEventListener("resize", resizeCanvas);
-window.addEventListener("orientationchange", () => setTimeout(resizeCanvas, 100));
+window.addEventListener("resize", () => {
+  resizeCanvas();
+  scaleGameElements();
+});
+window.addEventListener("orientationchange", () => setTimeout(() => {
+  resizeCanvas();
+  scaleGameElements();
+}, 100));
 
 // CHARACTER SELECTION
 document.querySelectorAll(".character-card").forEach((card) => {
@@ -49,25 +55,21 @@ const player = {
   maxVelocity: 8,
 };
 
-// Now that player exists, update resizeCanvas to scale player
-const _origResize = resizeCanvas;
-resizeCanvas = function() {
-  _origResize();
-  const scale = Math.min(canvas.width, canvas.height) / 700;
-  player.width = Math.max(30, 40 * scale);
-  player.height = Math.max(30, 40 * scale);
-};
-
 // Game variables
 let pipes = [];
 let pipeGap = 150;
 let pipeWidth = 70;
-let pipeSpacing = 450;
+let basePipeSpacing = 450;
 let lastPipeX = canvas.width;
 let gameSpeed = 2.5;
+let baseGameSpeed = 2.5;
+
 let epsteinBg = new Image();
 epsteinBg.src = 'img/epstein.png';
+let epsteinGifBg = new Image();
+epsteinGifBg.src = 'img/epstein-jeffrey-epstein.gif';
 let epsteinActive = false;
+let epsteinGifActive = false;
 let godMode = false;
 let cheatBuffer = '';
 const CHEAT_CODE = 'fearlessmotorischeenheid';
@@ -75,6 +77,47 @@ let efnAudio = new Audio('img/EFN.mp3');
 efnAudio.loop = true;
 efnAudio.playbackRate = 1.5;
 let efnPlaying = false;
+let efn2Audio = new Audio('img/EFN2.mp3');
+efn2Audio.loop = true;
+let efn2Playing = false;
+
+// Scale game elements based on screen size
+function scaleGameElements() {
+  const scale = Math.min(canvas.width, canvas.height) / 700;
+  
+  // Scale player size based on screen
+  player.width = Math.max(35, Math.min(70, 45 * scale));
+  player.height = Math.max(35, Math.min(70, 45 * scale));
+  
+  // Original Flappy Bird physics - balanced
+  player.gravity = 0.35;
+  player.jumpStrength = -6;
+  player.maxVelocity = 8;
+  
+  // Pipe width - consistent across devices
+  pipeWidth = 70;
+  
+  // Horizontal spacing between pipes - different per device type
+  if (canvas.width < 600) {
+    // Mobile - need much more space
+    basePipeSpacing = 400;
+  } else if (canvas.width < 1200) {
+    // Tablet/iPad
+    basePipeSpacing = 500;
+  } else if (canvas.width >= 2560) {
+    // 1440p+
+    basePipeSpacing = 700;
+  } else {
+    // Desktop 1080p
+    basePipeSpacing = 550;
+  }
+  
+  // Game speed - balanced
+  baseGameSpeed = canvas.width >= 2560 ? 3 : 2;
+}
+
+// Initial scale call
+scaleGameElements();
 
 // Listen for cheat code input
 document.addEventListener('keypress', (e) => {
@@ -98,6 +141,10 @@ document.addEventListener('keypress', (e) => {
 
 // Initialize game
 function startGame() {
+  // Ensure canvas is correctly sized first
+  resizeCanvas();
+  scaleGameElements();
+  
   // Load character image
   playerImage = new Image();
   playerImage.src = `img/fearless-${gameState.selectedCharacter}.png`;
@@ -108,22 +155,33 @@ function startGame() {
   gameState.isGameOver = false;
   gameRunning = true;
   epsteinActive = false;
+  epsteinGifActive = false;
+  document.getElementById('gifBackground').classList.remove('active');
+  // Reload and reset EFN audio
+  efnAudio.src = 'img/EFN.mp3';
+  efnAudio.loop = true;
+  efnAudio.playbackRate = 1.5;
   efnAudio.pause();
   efnAudio.currentTime = 0;
   efnPlaying = false;
+  efn2Audio.pause();
+  efn2Audio.currentTime = 0;
+  efn2Playing = false;
   
   // Update score display immediately
   document.getElementById("score").textContent = "Score: 0";
 
-  // Reset player position
-  player.x = canvas.width * 0.2;
+  // Reset player position - ensure we use fresh canvas dimensions
+  player.x = canvas.width * 0.15;
   player.y = canvas.height * 0.5;
   player.velocity = 0;
 
-  // Reset pipes
+  // Reset pipes - first pipe spawns off screen to the right
   pipes = [];
-  lastPipeX = canvas.width + 200;
-  gameSpeed = 2.5;
+  lastPipeX = canvas.width + 100;
+  
+  // Scale already done above
+  gameSpeed = baseGameSpeed;
 
   // Generate initial pipes
   for (let i = 0; i < 3; i++) {
@@ -156,20 +214,24 @@ function startGame() {
 // Game loop
 function gameLoop() {
   if (!gameLoopActive) return;
-  
-  resizeCanvas();
 
-  // Clear canvas
-  if (epsteinActive && epsteinBg.complete) {
+  // Always clear and draw background first
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  
+  // Draw background
+  if (epsteinGifActive) {
+    // Canvas is transparent, HTML gif element shows through
+  } else if (epsteinActive && epsteinBg.complete) {
     ctx.drawImage(epsteinBg, 0, 0, canvas.width, canvas.height);
   } else {
-    ctx.fillStyle = "rgba(135, 206, 235, 1)";
+    // Draw sky background
+    ctx.fillStyle = "#87ceeb";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
   }
 
   if (gameRunning && !gameState.isGameOver) {
     if (!gameState.isPaused) {
-      // Update physics
+      // Update physics - original Flappy Bird style
       player.velocity += player.gravity;
       // Limit falling speed (terminal velocity)
       if (player.velocity > player.maxVelocity) {
@@ -184,7 +246,7 @@ function gameLoop() {
       }
 
       // Generate pipes endlessly
-      while (lastPipeX < canvas.width + pipeSpacing) {
+      while (lastPipeX < canvas.width + basePipeSpacing) {
         createPipe();
       }
 
@@ -200,19 +262,26 @@ function gameLoop() {
             "Score: " + gameState.score;
           
           // Easter egg at score 15
-          if (gameState.score >= 15 && !efnPlaying) {
+          if (gameState.score >= 15 && gameState.score < 100 && !efnPlaying) {
             epsteinActive = true;
             efnAudio.currentTime = 0;
             efnAudio.play();
             efnPlaying = true;
           }
           
-          // Stop music at score 100
-          if (gameState.score >= 100 && efnPlaying) {
+          // At score 100: switch to EFN2 and gif background
+          if (gameState.score >= 100 && !efn2Playing) {
+            // Force stop EFN.mp3
             efnAudio.pause();
             efnAudio.currentTime = 0;
+            efnAudio.src = '';
             efnPlaying = false;
             epsteinActive = false;
+            epsteinGifActive = true;
+            document.getElementById('gifBackground').classList.add('active');
+            efn2Audio.currentTime = 0;
+            efn2Audio.play();
+            efn2Playing = true;
           }
         }
 
@@ -262,21 +331,31 @@ function gameLoop() {
 
 // Create pipe
 function createPipe() {
-  const minGap = 200;
-  const maxGap = 280;
+  // Vertical gap between top and bottom pipe - random size
+  const minGap = 150;
+  const maxGap = 250;
   const randomGap = minGap + Math.random() * (maxGap - minGap);
-  const minTopHeight = 50;
-  const maxTopHeight = canvas.height - randomGap - 100;
-  const topHeight = Math.random() * (maxTopHeight - minTopHeight) + minTopHeight;
+  
+  // Pipe position constraints
+  const minTopHeight = 80; // Minimum height of top pipe
+  const minBottomPipeHeight = 80; // Minimum height of bottom pipe
+  const maxTopHeight = canvas.height - randomGap - minBottomPipeHeight;
+  
+  // Ensure valid range
+  const safeMaxTopHeight = Math.max(minTopHeight + 30, maxTopHeight);
+  const topHeight = Math.random() * (safeMaxTopHeight - minTopHeight) + minTopHeight;
+  
+  // Bottom pipe starts after the gap
+  const bottomStart = topHeight + randomGap;
 
   pipes.push({
     x: lastPipeX,
     topHeight: topHeight,
-    bottomStart: topHeight + randomGap,
+    bottomStart: bottomStart,
     scored: false,
   });
 
-  lastPipeX += pipeSpacing;
+  lastPipeX += basePipeSpacing;
 }
 
 // Collision detection
@@ -368,6 +447,11 @@ function endGame() {
   efnAudio.pause();
   efnAudio.currentTime = 0;
   efnPlaying = false;
+  efn2Audio.pause();
+  efn2Audio.currentTime = 0;
+  efn2Playing = false;
+  epsteinGifActive = false;
+  document.getElementById('gifBackground').classList.remove('active');
   document.getElementById("finalScore").textContent =
     "Final Score: " + gameState.score;
 
