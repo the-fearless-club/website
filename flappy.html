@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="nl">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Fearless Flappy Bird</title>
+  <link rel="stylesheet" href="flappy.css" />
+</head>
+
+<body>
+  <!-- CHARACTER SELECTION SCREEN -->
+  <div id="characterSelection" class="screen active">
+    <div class="selection-container">
+      <h1>THE FEARLESS BIRD</h1>
+      <p>Choose your character:</p>
+      <div class="character-grid">
+        <div class="character-card" data-character="tree">
+          <img src="img/fearless-tree.png" alt="Fearless Tree" />
+          <h3>Fearless Tree</h3>
+        </div>
+        <div class="character-card" data-character="tomato">
+          <img src="img/fearless-tomato.png" alt="Fearless Tomato" />
+          <h3>Fearless Tomato</h3>
+        </div>
+        <div class="character-card" data-character="cactus">
+          <img src="img/fearless-cactus.png" alt="Fearless Cactus" />
+          <h3>Fearless Cactus</h3>
+        </div>
+        <div class="character-card" data-character="goose">
+          <img src="img/fearless-goose.png" alt="Fearless Goose" />
+          <h3>Fearless Goose</h3>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- GAME SCREEN -->
+  <div id="gameScreen" class="screen">
+    <div id="gameContainer">
+      <canvas id="gameCanvas"></canvas>
+    </div>
+    <div id="hud">
+      <div id="score">Score: 0</div>
+      <button id="pauseBtn">⏸ Pause</button>
+    </div>
+  </div>
+
+  <!-- GAME OVER SCREEN -->
+  <div id="gameOverScreen" class="screen">
+    <div class="game-over-container">
+      <h1>GAME OVER!</h1>
+      <p id="finalScore">Final Score: 0</p>
+      <button id="restartBtn">Play Again</button>
+      <button id="backBtn">Back to Selection</button>
+    </div>
+  </div>
+
+  <script src="flappy.js"></script>
+</body>
+
+</html>

@@ -44,6 +44,23 @@ button:hover {
   transform: scale(1.1);
 }
 
+.play-button {
+  display: inline-block;
+  margin-left: 1rem;
+  font-size: 1.1rem;
+  padding: 1rem 2.5rem;
+  border-radius: 999px;
+  background: linear-gradient(45deg, #00d4ff, #3333ff);
+  color: white;
+  font-weight: bold;
+  text-decoration: none;
+  transition: transform 0.2s ease;
+}
+
+.play-button:hover {
+  transform: scale(1.1);
+}
+
 /* MEMBERS */
 .members {
   max-width: 1100px;
