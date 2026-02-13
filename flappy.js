@@ -72,7 +72,27 @@ let epsteinActive = false;
 let epsteinGifActive = false;
 let godMode = false;
 let cheatBuffer = '';
-const CHEAT_CODE = 'fearlessmotorischeenheid';
+const CHEAT_LENGTH = 24;
+
+// Simple hash function
+function hashCode(str) {
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    const char = str.charCodeAt(i);
+    hash = ((hash << 5) - hash) + char;
+    hash = hash & hash;
+  }
+  // Convert to hex string
+  const hex = (hash >>> 0).toString(16);
+  // Create a longer hash by combining multiple operations
+  let result = '';
+  for (let i = 0; i < str.length; i++) {
+    result += ((str.charCodeAt(i) * 7 + i * 13) % 256).toString(16).padStart(2, '0');
+  }
+  return result.substring(0, 32);
+}
+
+const VALID_HASH = 'cad0c14528047380637eae98ba88db78';
 let efnAudio = new Audio('img/EFN.mp3');
 efnAudio.loop = true;
 efnAudio.playbackRate = 1.5;
@@ -128,10 +148,10 @@ scaleGameElements();
 // Listen for cheat code input
 document.addEventListener('keypress', (e) => {
   cheatBuffer += e.key.toLowerCase();
-  if (cheatBuffer.length > CHEAT_CODE.length) {
-    cheatBuffer = cheatBuffer.slice(-CHEAT_CODE.length);
+  if (cheatBuffer.length > CHEAT_LENGTH) {
+    cheatBuffer = cheatBuffer.slice(-CHEAT_LENGTH);
   }
-  if (cheatBuffer === CHEAT_CODE) {
+  if (cheatBuffer.length === CHEAT_LENGTH && hashCode(cheatBuffer) === VALID_HASH) {
     godMode = !godMode;
     cheatBuffer = '';
     showCheatNotification();
@@ -141,7 +161,7 @@ document.addEventListener('keypress', (e) => {
 // Enter Code button handler
 document.getElementById('enterCodeBtn').addEventListener('click', () => {
   const code = prompt('Enter cheat code:');
-  if (code && code.toLowerCase() === CHEAT_CODE) {
+  if (code && hashCode(code.toLowerCase()) === VALID_HASH) {
     godMode = !godMode;
     showCheatNotification();
   } else if (code) {
