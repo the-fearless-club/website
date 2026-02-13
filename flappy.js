@@ -80,6 +80,12 @@ let efnPlaying = false;
 let efn2Audio = new Audio('img/EFN2.mp3');
 efn2Audio.loop = true;
 let efn2Playing = false;
+let impressedBg = new Image();
+impressedBg.src = 'img/impressed.png';
+let impressedActive = false;
+let hardtekkAudio = new Audio('img/hardtekk.mp3');
+hardtekkAudio.loop = true;
+let hardtekkPlaying = false;
 
 // Scale game elements based on screen size
 function scaleGameElements() {
@@ -128,16 +134,33 @@ document.addEventListener('keypress', (e) => {
   if (cheatBuffer === CHEAT_CODE) {
     godMode = !godMode;
     cheatBuffer = '';
-    const hud = document.getElementById('score');
-    if (godMode) {
-      hud.textContent = 'GOD MODE ON';
-      setTimeout(() => { hud.textContent = 'Score: ' + gameState.score; }, 1500);
-    } else {
-      hud.textContent = 'GOD MODE OFF';
-      setTimeout(() => { hud.textContent = 'Score: ' + gameState.score; }, 1500);
-    }
+    showCheatNotification();
   }
 });
+
+// Enter Code button handler
+document.getElementById('enterCodeBtn').addEventListener('click', () => {
+  const code = prompt('Enter cheat code:');
+  if (code && code.toLowerCase() === CHEAT_CODE) {
+    godMode = !godMode;
+    showCheatNotification();
+  } else if (code) {
+    alert('Invalid code!');
+  }
+});
+
+// Show cheat notification
+function showCheatNotification() {
+  const message = godMode ? 'GOD MODE ON' : 'GOD MODE OFF';
+  
+  if (gameScreen.classList.contains('active')) {
+    const hud = document.getElementById('score');
+    hud.textContent = message;
+    setTimeout(() => { hud.textContent = 'Score: ' + gameState.score; }, 1500);
+  } else {
+    alert(message);
+  }
+}
 
 // Initialize game
 function startGame() {
@@ -156,6 +179,7 @@ function startGame() {
   gameRunning = true;
   epsteinActive = false;
   epsteinGifActive = false;
+  impressedActive = false;
   document.getElementById('gifBackground').classList.remove('active');
   // Reload and reset EFN audio
   efnAudio.src = 'img/EFN.mp3';
@@ -167,7 +191,10 @@ function startGame() {
   efn2Audio.pause();
   efn2Audio.currentTime = 0;
   efn2Playing = false;
-  
+  hardtekkAudio.pause();
+  hardtekkAudio.currentTime = 0;
+  hardtekkPlaying = false;
+
   // Update score display immediately
   document.getElementById("score").textContent = "Score: 0";
 
@@ -219,7 +246,9 @@ function gameLoop() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   
   // Draw background
-  if (epsteinGifActive) {
+  if (impressedActive && impressedBg.complete) {
+    ctx.drawImage(impressedBg, 0, 0, canvas.width, canvas.height);
+  } else if (epsteinGifActive) {
     // Canvas is transparent, HTML gif element shows through
   } else if (epsteinActive && epsteinBg.complete) {
     ctx.drawImage(epsteinBg, 0, 0, canvas.width, canvas.height);
@@ -270,7 +299,7 @@ function gameLoop() {
           }
           
           // At score 100: switch to EFN2 and gif background
-          if (gameState.score >= 100 && !efn2Playing) {
+          if (gameState.score >= 100 && gameState.score < 1000 && !efn2Playing) {
             // Force stop EFN.mp3
             efnAudio.pause();
             efnAudio.currentTime = 0;
@@ -282,6 +311,24 @@ function gameLoop() {
             efn2Audio.currentTime = 0;
             efn2Audio.play();
             efn2Playing = true;
+          }
+          
+          // At score 1000: switch to impressed background and hardtekk
+          if (gameState.score >= 1000 && !hardtekkPlaying) {
+            // Stop EFN2
+            efn2Audio.pause();
+            efn2Audio.currentTime = 0;
+            efn2Audio.src = '';
+            efn2Playing = false;
+            // Disable gif background
+            epsteinGifActive = false;
+            document.getElementById('gifBackground').classList.remove('active');
+            // Enable impressed background
+            impressedActive = true;
+            // Start hardtekk at 30 seconds
+            hardtekkAudio.currentTime = 30;
+            hardtekkAudio.play();
+            hardtekkPlaying = true;
           }
         }
 
@@ -450,6 +497,10 @@ function endGame() {
   efn2Audio.pause();
   efn2Audio.currentTime = 0;
   efn2Playing = false;
+  hardtekkAudio.pause();
+  hardtekkAudio.currentTime = 0;
+  hardtekkPlaying = false;
+  impressedActive = false;
   epsteinGifActive = false;
   document.getElementById('gifBackground').classList.remove('active');
   document.getElementById("finalScore").textContent =
